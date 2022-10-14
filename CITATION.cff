@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Meng"
+    given-names: "Kevin"
+  - family-names: "Sen Sharma"
+    given-names: "Arnab"
+  - family-names: "Andonian"
+    given-names: "Alex"
+  - family-names: "Belinkov"
+    given-names: "Yonatan"
+  - family-names: "Bau"
+    given-names: "David"
+  journal: "arXiv preprint arXiv:2210.07229"
+  title: "Mass-Editing Memory in a Transformer"
+  year: 2022

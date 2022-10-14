@@ -1,0 +1,21 @@
+name: memit
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.9.7
+  - pip=21.2.4
+  - cudatoolkit=11.3
+  - pytorch==1.12.1
+  - pip:
+    - einops==0.4.0
+    - higher==0.2.1
+    - hydra-core==1.2.0
+    - transformers==4.23.1
+    - datasets==2.6.0
+    - matplotlib==3.6.1
+    - spacy==3.4.1
+    - scipy==1.9.2
+    - scikit-learn==1.0.2
+    - nltk==3.7
+    - jupyter==1.0.0
