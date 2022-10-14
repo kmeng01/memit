@@ -78,12 +78,12 @@ python3 -m experiments.summarize --dir_name=MEMIT --runs=run_<run1>,run_<run2>
 
 Running `python3 -m experiments.evaluate -h` or `python3 -m experiments.summarize -h` provides details about command-line flags.
 
-## Generating Scaling Curves
-
-asdfasdf
-
 ## How to Cite
 
 ```bibtex
-Coming soon!
-```
+@article{meng2022memit,
+  title={Mass Editing Memory in a Transformer},
+  author={Kevin Meng and Sen Sharma, Arnab and Alex Andonian and Yonatan Belinkov and David Bau},
+  journal={arXiv preprint arXiv:2210.07229},
+  year={2022}
+}```
