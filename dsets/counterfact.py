@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 
 from util.globals import *
 
-REMOTE_URL = f"{REMOTE_ROOT_URL}/data/dsets/counterfact.json"
+REMOTE_ROOT = f"{REMOTE_ROOT_URL}/data/dsets"
 
 
 class CounterFactDataset(Dataset):
@@ -24,9 +24,10 @@ class CounterFactDataset(Dataset):
             "counterfact.json" if not multi else "multi_counterfact.json"
         )
         if not cf_loc.exists():
-            print(f"{cf_loc} does not exist. Downloading from {REMOTE_URL}")
+            remote_url = f"{REMOTE_ROOT}/{'multi_' if multi else ''}counterfact.json"
+            print(f"{cf_loc} does not exist. Downloading from {remote_url}")
             data_dir.mkdir(exist_ok=True, parents=True)
-            torch.hub.download_url_to_file(REMOTE_URL, cf_loc)
+            torch.hub.download_url_to_file(remote_url, cf_loc)
 
         with open(cf_loc, "r") as f:
             self.data = json.load(f)
