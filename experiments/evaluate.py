@@ -140,7 +140,7 @@ def main(
             if conserve_memory
             else dict()
         )
-        etc_args = dict(cache_template=cache_template) if "ROME" in alg_name else dict()
+        etc_args = dict(cache_template=cache_template) if any(alg in alg_name for alg in ["ROME", "MEMIT"]) else dict()
 
         start = time()
         edited_model, weights_copy = apply_algo(
