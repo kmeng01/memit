@@ -104,7 +104,8 @@ if __name__ == "__main__":
         default="mcf",
         help="Dataset to perform evaluations on. Either CounterFact (cf), MultiCounterFact (mcf), or zsRE (zsre).",
     )
-    parser.add_argument("--min_num_records", type=int, default=None)
+    parser.add_argument("--min_records", type=int, default=None)
+    parser.add_argument("--max_records", type=int, default=None)
     parser.add_argument(
         "--num_edits",
         type=str,
@@ -134,15 +135,21 @@ if __name__ == "__main__":
 
     for cur_num_edits in list(map(int, args.num_edits.split(","))):
         torch.cuda.empty_cache()
+
+        num_records = (
+            None if args.max_records is None
+            else min(args.max_records, cur_num_edits)
+        )
+        if args.min_records is not None:
+            num_records = max(args.min_records, cur_num_edits)
+
         exec_sweep(
             args.alg_name,
             (model, tok),
             args.hparams_fname,
             args.ds_name,
             Path(args.sweep_dir),
-            None
-            if args.min_num_records is None
-            else max(args.min_num_records, cur_num_edits),
+            num_records,
             args.generation_test_interval,
             cur_num_edits,
             args.use_cache,
