@@ -191,6 +191,8 @@ def get_module_input_output_at_words(
     words: List[str],
     module_template: str,
     fact_token_strategy: str,
+    retain_input: bool = True,
+    retain_output: bool = True,
 ) -> Tuple[torch.Tensor]:
     """
     Retrieves detached representations for a word at the input and
@@ -209,8 +211,9 @@ def get_module_input_output_at_words(
             words=words,
         )
         subtoken = fact_token_strategy[len("subject_") :]
-        l_input, l_output = repr_tools.get_reprs_at_word_tokens(
-            track="both", subtoken=subtoken, **context_info, **word_repr_args
+        track = "both" if retain_input and retain_output else "in" if retain_input else "out"
+        l_repr = repr_tools.get_reprs_at_word_tokens(
+            track=track, subtoken=subtoken, **context_info, **word_repr_args
         )
     elif fact_token_strategy == "last":
         raise Exception("This is definitely bugged, fix it.")
@@ -226,7 +229,7 @@ def get_module_input_output_at_words(
     else:
         raise ValueError(f"fact_token={fact_token_strategy} not recognized")
 
-    return l_input.detach(), l_output.detach()
+    return (l_repr[0].detach(), l_repr[1].detach()) if retain_input and retain_output else l_repr.detach()
 
 
 def find_fact_lookup_idx(
