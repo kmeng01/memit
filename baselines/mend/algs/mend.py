@@ -260,11 +260,21 @@ class MEND(EditableModel):
         for p in pset:
             assert p in names, f"inner param {p} not in model"
 
+        # The hooks overwrite __x__ and __delta__ on every chunk, so collect them
+        # per chunk to use all edits, not only the last chunk.
+        xs, deltas = defaultdict(list), defaultdict(list)
         for i in range(0, batch[next(iter(batch.keys()))].size(0), max_batch_size):
             cur_batch = {k: v[i : i + max_batch_size] for k, v in batch.items()}
             cur_outputs = _logits(self.model(**cur_batch))
             cur_loss = self.edit_loss_fn(cur_outputs, cur_batch["labels"])["nll"]
             cur_loss.backward()
+            for n, p in _inner_params(
+                self.model.named_parameters(), self.config.model.inner_params
+            ):
+                xs[n].append(p.__x__.reshape(-1, p.__x__.shape[-1]))
+                deltas[n].append(p.__delta__.reshape(-1, p.__delta__.shape[-1]))
+        xs = {n: torch.cat(x) for n, x in xs.items()}
+        deltas = {n: torch.cat(d) for n, d in deltas.items()}
 
         if self.config.mend.shared:
             param_idx = (
@@ -274,7 +284,7 @@ class MEND(EditableModel):
             )  # noqa: E731
             transformed_factors = {
                 n: self.mend[str(tuple(self.get_shape(p)))](
-                    p.__x__, p.__delta__, param_idx(n, p)
+                    xs[n], deltas[n], param_idx(n, p)
                 )
                 for n, p in _inner_params(
                     self.model.named_parameters(), self.config.model.inner_params
@@ -282,7 +292,7 @@ class MEND(EditableModel):
             }
         else:
             transformed_factors = {
-                n: self.mend[n.replace(".", "#")](p.__x__, p.__delta__)
+                n: self.mend[n.replace(".", "#")](xs[n], deltas[n])
                 for n, p in _inner_params(
                     self.model.named_parameters(), self.config.model.inner_params
                 )
