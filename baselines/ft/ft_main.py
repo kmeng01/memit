@@ -85,7 +85,7 @@ def execute_ft(
     # Configure optimizer / gradients
     wd = (
         hparams.weight_decay
-        if not isinstance(hparams.wd_power_law, tuple)
+        if not isinstance(hparams.wd_power_law, (list, tuple))
         else (len(requests) ** hparams.wd_power_law[0])
         * np.exp(hparams.wd_power_law[1])
     )
