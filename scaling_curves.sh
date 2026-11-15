@@ -29,7 +29,7 @@ do
     mkdir -p results/$sweep_dir
     echo "{}" > results/$sweep_dir/config.json
 
-    python3 -m experiments.sweep --alg_name=$alg_name --model_name=$MODEL_NAME --hparams_fname=$hparams_fname --sweep_dir=$sweep_dir --min_num_records=$MIN_NUM_RECORDS --num_edits=$N_EDITS --generation_test_interval=$GEN_TEST_INTERV --use_cache
+    python3 -m experiments.sweep --alg_name=$alg_name --model_name=$MODEL_NAME --hparams_fname=$hparams_fname --sweep_dir=$sweep_dir --min_records=$MIN_NUM_RECORDS --num_edits=$N_EDITS --generation_test_interval=$GEN_TEST_INTERV --use_cache
 done
 
 exit 0
